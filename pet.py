@@ -700,7 +700,6 @@ def make_daemon():
     fd.write(str(os.getpid))
     process_fun()
 
-
 if __name__ == '__main__':
     multiprocessing.set_start_method("spawn")
     ##p1= multiprocessing.Process(target=make_daemon,args="",daemon=True)
