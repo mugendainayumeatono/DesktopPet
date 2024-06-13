@@ -4,19 +4,32 @@ Made by Wolf
 http://www.wolfchen.top
 https://github.com/WolfChen1996/DesktopPet
 '''
-import multiprocessing.process
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+try:
+    import multiprocessing.process
+    from PyQt5.QtGui import *
+    from PyQt5.QtCore import *
+    from PyQt5.QtWidgets import *
 
-from PIL import Image
-import random
-import sys
-import os
-import configparser
-from setting import Ui_MainWindow
-import atexit
-import multiprocessing
+    from PIL import Image
+    import random
+    import sys
+    import os
+    import configparser
+    from setting import Ui_MainWindow
+except ImportError:
+    import pip
+    pip.main(["install","-r","requirements.txt"])
+    import multiprocessing.process
+    from PyQt5.QtGui import *
+    from PyQt5.QtCore import *
+    from PyQt5.QtWidgets import *
+
+    from PIL import Image
+    import random
+    import sys
+    import os
+    import configparser
+    from setting import Ui_MainWindow
 
 #初始化配置，并定义全局变量
 fp_dir=os.getcwd()
