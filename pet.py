@@ -4,6 +4,7 @@ Made by Wolf
 http://www.wolfchen.top
 https://github.com/WolfChen1996/DesktopPet
 '''
+import multiprocessing.process
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -14,6 +15,8 @@ import sys
 import os
 import configparser
 from setting import Ui_MainWindow
+import atexit
+import multiprocessing
 
 #初始化配置，并定义全局变量
 fp_dir=os.getcwd()
@@ -151,8 +154,11 @@ class App(QWidget):
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.game)
-        self.timer.start(gamespeed)
+        self.timer.start(int(gamespeed))
     
+    def move(self, ax: float, ay: float):
+        QWidget.move(self,int(ax),int(ay))
+
     def game(self):
         #循环执行主函数
         global petwidth,playid,playtime,petaction,petaction2,playstand,playnum,petleft,pettop,imgpath
@@ -290,7 +296,7 @@ class App(QWidget):
                 
                 
         petimage = image_url + imgpath
-        print(petimage)
+        ##print(petimage)
         #petimage=petimage.mirrored(True, False)
         pix = QPixmap(petimage)
         if right==1:
@@ -681,9 +687,22 @@ class setting(QMainWindow, Ui_MainWindow):
         petwidth=int(im.size[0]*petscale)
         petheight=int(im.size[1]*petscale)
         bottomfix=bottomfix*petscale
-    
-if __name__ == '__main__':
+
+def process_fun():
+    global setting
     app = QApplication(sys.argv)
     pet = App()
     setting = setting()
     sys.exit(app.exec_())
+
+def make_daemon():
+    fd = open("pid","w+")
+    fd.write(str(os.getpid))
+    process_fun()
+
+
+if __name__ == '__main__':
+    multiprocessing.set_start_method("spawn")
+    ##p1= multiprocessing.Process(target=make_daemon,args="",daemon=True)
+    p1= multiprocessing.Process(target=make_daemon,args="")
+    p1.start()
